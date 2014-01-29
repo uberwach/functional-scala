@@ -1,6 +1,7 @@
 object Chapter2Exercises {
 
   def Fib(n : Int) : Int = {
+    @annotation.tailrec
     def FibAcc(n : Int, a : Int, b: Int) : Int = 
       if (n == 0) a
       else FibAcc(n-1,b,a+b)
