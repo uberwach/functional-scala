@@ -1,4 +1,4 @@
-object Chapter1Exercises {
+object Chapter2Exercises {
 
   def Fib(n : Int) : Int = {
     def FibAcc(n : Int, a : Int, b: Int) : Int = 
