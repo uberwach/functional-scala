@@ -19,7 +19,10 @@ object List {
     def foldLeft[A,B](as : List[A], b: B)(f: (B,A) => B) : B = {
       @annotation.tailrec
       def foldLeftAcc(as : List[A], acc : B) : B = {
-        foldLeftAcc(tail(as),f(acc,head(as)))
+        as match {
+          case Nil => acc
+          case Cons(x,xs) => foldLeftAcc(xs,f(acc,x))
+        }
       }
       foldLeftAcc(as,b)
     }
@@ -59,6 +62,19 @@ object List {
     case Cons(x,xs) => x
   }
 
+  def last[A](as: List[A]): A = { 
+    @annotation.tailrec
+    def lastAcc(l: List[A], a : A) : A = {
+      l match {
+        case Nil => a
+        case Cons(x,xs) => lastAcc(xs,x)
+      }
+    }
+    as match {
+    	case Nil => sys.error("No last element of []")
+    	case Cons(x,xs) => lastAcc(xs,x)
+    }
+  }
   def drop[A](as: List[A], n: Int): List[A] = {
     @annotation.tailrec
     def dropacc(as: List[A], n: Int, acc: List[A]): List[A] = {
@@ -97,4 +113,9 @@ object List {
   def setHead[A](as: List[A], a: A) = Cons(a, tail(as))
   
   def length[A](as : List[A]) : Int = foldRight(as,0)( (a,b) => b + 1)
+  
+  // foldLeft versions are just foldRight replaced with foldLeft and use g(a,b) = f(b,a) instead of f
+  def sum3(as: List[Int]) : Int = foldLeft(as,0)(_ + _)
+  
+  def reverse[A](as : List[A]) : List[A] = foldLeft(as,Nil : List[A])((b,a) => Cons(a,b))
 }

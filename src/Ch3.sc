@@ -1,6 +1,5 @@
 object Ch3 {
    import data._
- 
  List.drop(List(1,2,3),5)                         //> res0: data.List[Int] = Cons(3,Cons(2,Cons(1,Nil)))
  List.dropWhile(List(1,2,3))(_ < 3)               //> res1: data.List[Int] = Cons(2,Cons(1,Nil))
  List.setHead(List(2,2,3), 1)                     //> res2: data.Cons[Int] = Cons(1,Cons(2,Cons(3,Nil)))
@@ -46,4 +45,6 @@ object Ch3 {
                                                   //| ))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))
                                                   //| )))))))))))))))))))))))
  List.sum2(bigList)                               //> res9: Int = 20100
+ 
+ List.reverse(List(1,2,3))                        //> res10: data.List[Int] = Cons(3,Cons(2,Cons(1,Nil)))
 }
