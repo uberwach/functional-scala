@@ -47,4 +47,14 @@ object Ch3 {
  List.sum2(bigList)                               //> res9: Int = 20100
  
  List.reverse(List(1,2,3))                        //> res10: data.List[Int] = Cons(3,Cons(2,Cons(1,Nil)))
+ 
+ val abc = List("a","b","c")                      //> abc  : data.List[String] = Cons(a,Cons(b,Cons(c,Nil)))
+ List.foldLeft2(abc, "")((a,b) => a+a+b)          //> res11: String = aabaabc
+ List.foldRight2(abc, "")((a,b) => a+b+b)         //> res12: String = abccbcc
+ 
+ List.append2(List(1,2),List(3,4))                //> res13: data.List[Int] = Cons(1,Cons(2,Cons(3,Cons(4,Nil))))
+ 
+ List.flatten(List(List(1,2),List(3,4),List(5)))  //> res14: data.List[Int] = Cons(1,Cons(2,Cons(3,Cons(4,Cons(5,Nil)))))
+ 
+ List.map(List(1,2,3), (x : Int) => x + 1)        //> res15: data.List[Int] = Cons(2,Cons(3,Cons(4,Nil)))
 }
