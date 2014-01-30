@@ -27,6 +27,7 @@ object List {
     foldLeftAcc(as, b)
   }
 
+  // NOT AN EXERCISE
   // test function to create big lists
   // gen(1),...,gen(length) is created
   def genSequence[A](length: Int, gen: Int => A): List[A] = {
@@ -60,6 +61,11 @@ object List {
   def head[A](as: List[A]): A = as match {
     case Nil => throw sys.error("No head of an empty list!")
     case Cons(x, xs) => x
+  }
+  
+  def isEmpty[A](as : List[A]) : Boolean = as match {
+    case Nil => true
+    case _ => false
   }
 
   def last[A](as: List[A]): A = {
@@ -121,6 +127,7 @@ object List {
   def length[A](as: List[A]): Int = foldRight(as, 0)((a, b) => b + 1)
 
   // foldLeft versions are just foldRight replaced with foldLeft and use g(a,b) = f(b,a) instead of f
+  // for example rewriting sum:
   def sum3(as: List[Int]): Int = foldLeft(as, 0)(_ + _)
 
   def reverse[A](as: List[A]): List[A] = foldLeft(as, Nil: List[A])((b, a) => Cons(a, b))
@@ -133,8 +140,40 @@ object List {
   // that identifier though
   def flatten[A](ass : List[List[A]]) : List[A] = foldLeft(ass, Nil : List[A])(append)
   
-  def map[A,B](as : List[A], f: A => B) : List[B] = foldRight(as, Nil : List[B])((a,bs) => Cons(f(a),bs))
+  def map[A,B](as : List[A])(f: A => B) : List[B] = foldRight(as, Nil : List[B])((a,bs) => Cons(f(a),bs))
   
-  def addOne(ns : List[Int]) = map(ns, (x : Int) => x+1)
-  def print(ds : List[Double]) : List[String] = map(ds, (_ : Double).toString)
+  def addOne(ns : List[Int]) = map(ns)( (x : Int) => x+1)
+  def print(ds : List[Double]) : List[String] = map(ds)( (_ : Double).toString)
+  
+  def filter[A](as: List[A], f: A => Boolean) : List[A] = foldRight(as, Nil: List[A])((a,xs) => {
+    if (f(a)) Cons(a,xs)
+    else xs
+  })
+  
+  def flatMap[A,B](as: List[A])(f: A => List[B]) : List[B] = flatten(map(as)(f))
+  // filter by using flatMap
+  def filter2[A](as: List[A])(f: A => Boolean) = flatMap(as)(a => if (f(a)) List(a) else Nil)
+  
+  // definitely not optimal
+  def zip[A,B](as : List[A], bs : List[B]) : List[(A,B)] = {
+    @annotation.tailrec
+    def zipAcc(xs: List[A], ys : List[B], zs : List[(A,B)]) : List[(A,B)] = {
+      if (isEmpty(xs) || isEmpty(ys)) zs
+      else zipAcc(tail(xs),tail(ys), Cons((head(xs),head(ys)),zs))
+    }
+    reverse(zipAcc(as,bs,Nil))
+  }
+  
+  def combine[A,B,C](as : List[A], bs : List[B])( f: (A,B) => C) : List[C] = map(zip(as,bs))( ab => f(ab._1,ab._2))
+
+  def forall[A](as: List[A])(p: A => Boolean): Boolean = foldLeft(as, true)((b, a) => b && p(a))
+  // inefficient but natural
+  def hasSubsequence[A](as: List[A], sub: List[A]): Boolean = {
+    if (isEmpty(sub)) true
+    else if (isEmpty(as)) false
+    else {
+      val asub = zip(as,sub)
+      (forall(asub)(x => x._1 == x._2) && (length(asub) == length(sub))) || hasSubsequence(tail(as),sub)
+    }
+  }
 }
