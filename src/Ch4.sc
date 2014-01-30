@@ -1,5 +1,5 @@
 object Ch4 {
-import data.Option
+import data.{Option,none,some,List}
 	val op1 = data.some(1)                    //> op1  : data.some[Int] = some(1)
 	op1.map(a => a+1)                         //> res0: data.Option[Int] = some(2)
 	val op2 : Option[Int] = data.none         //> op2  : data.Option[Int] = none
@@ -24,4 +24,16 @@ import data.Option
 	variance(deadlifts)                       //> res11: data.Option[Double] = some(1387.5)
 	mean(Nil)                                 //> res12: data.Option[Double] = none
 	variance(Nil)                             //> res13: data.Option[Double] = none
+	
+	
+	Option.map2(data.some(1),data.some(2))(_ + _)
+                                                  //> res14: data.Option[Int] = some(3)
+	Option.map2(data.some(1),data.none : Option[Int])(_ + _)
+                                                  //> res15: data.Option[Int] = none
+    
+  Option.sequence(List(some(1),some(2)))          //> res16: data.Option[data.List[Int]] = some(Cons(1,Cons(2,Nil)))
+  Option.sequence(List(some(1),none,some(3)))     //> res17: data.Option[data.List[Int]] = none
+  
+  Option.sequence2(List(some(1),some(2)))         //> res18: data.Option[data.List[Int]] = some(Cons(1,Cons(2,Nil)))
+  Option.sequence2(List(some(1),none,some(3)))    //> res19: data.Option[data.List[Int]] = none
 }
