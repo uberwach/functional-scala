@@ -38,7 +38,7 @@ object Option {
       case none => Nil
     }))
 
-    // this is a foldRight in disguise I think, needs some way to stop when it is clear that result will be none
+  // this is a foldRight in disguise I think, needs some way to stop when it is clear that result will be none
   def traverse[A, B](as: List[A])(f: A => Option[B]): Option[List[B]] = {
     def traverseAcc(rest: List[A]): Option[List[B]] = {
       rest match {
@@ -48,7 +48,7 @@ object Option {
             case some(b) => {
               val optList = traverseAcc(List.tail(rest))
               optList match {
-                case some(list) => some(Cons(b,list))
+                case some(list) => some(Cons(b, list))
                 case none => data.none
               }
             }
@@ -60,8 +60,8 @@ object Option {
     }
     traverseAcc(as)
   }
-    
-  def sequence2[A](opts: List[Option[A]]) : Option[List[A]] = traverse(opts)(x => x)
+
+  def sequence2[A](opts: List[Option[A]]): Option[List[A]] = traverse(opts)(x => x)
 
   def mean(xs: Seq[Double]): Option[Double] =
     if (xs.isEmpty) none

@@ -1,23 +1,23 @@
 object Ch3 {
-   import data._
- List.drop(List(1,2,3),5)                         //> res0: data.List[Int] = Cons(3,Cons(2,Cons(1,Nil)))
- List.dropWhile(List(1,2,3))(_ < 3)               //> res1: data.List[Int] = Cons(2,Cons(1,Nil))
- List.setHead(List(2,2,3), 1)                     //> res2: data.Cons[Int] = Cons(1,Cons(2,Cons(3,Nil)))
- List.init(List(1,2,3))                           //> res3: Int = 3
- 
- val firstFive = List(1,2,3,4,5)                  //> firstFive  : data.List[Int] = Cons(1,Cons(2,Cons(3,Cons(4,Cons(5,Nil)))))
- List.sum2(firstFive)                             //> res4: Int = 15
- 
- List.product2(List(1.,2.,3.))                    //> res5: Double = 6.0
- 
- List.foldRight(List(1,2,3),Nil:List[Int])(Cons(_,_))
+  import data._
+  List.drop(List(1, 2, 3), 5)                     //> res0: data.List[Int] = Cons(3,Cons(2,Cons(1,Nil)))
+  List.dropWhile(List(1, 2, 3))(_ < 3)            //> res1: data.List[Int] = Cons(2,Cons(1,Nil))
+  List.setHead(List(2, 2, 3), 1)                  //> res2: data.Cons[Int] = Cons(1,Cons(2,Cons(3,Nil)))
+  List.init(List(1, 2, 3))                        //> res3: Int = 3
+
+  val firstFive = List(1, 2, 3, 4, 5)             //> firstFive  : data.List[Int] = Cons(1,Cons(2,Cons(3,Cons(4,Cons(5,Nil)))))
+  List.sum2(firstFive)                            //> res4: Int = 15
+
+  List.product2(List(1., 2., 3.))                 //> res5: Double = 6.0
+
+  List.foldRight(List(1, 2, 3), Nil: List[Int])(Cons(_, _))
                                                   //> res6: data.List[Int] = Cons(1,Cons(2,Cons(3,Nil)))
-                                                  
- List.length(firstFive)                           //> res7: Int = 5
- 
- List.foldLeft(firstFive,0)(_ + _)                //> res8: Int = 15
- 
- val bigList = List.reverse(List.genSequence(200, (x : Int) => x))
+
+  List.length(firstFive)                          //> res7: Int = 5
+
+  List.foldLeft(firstFive, 0)(_ + _)              //> res8: Int = 15
+
+  val bigList = List.reverse(List.genSequence(200, (x: Int) => x))
                                                   //> bigList  : data.List[Int] = Cons(1,Cons(2,Cons(3,Cons(4,Cons(5,Cons(6,Cons(7
                                                   //| ,Cons(8,Cons(9,Cons(10,Cons(11,Cons(12,Cons(13,Cons(14,Cons(15,Cons(16,Cons(
                                                   //| 17,Cons(18,Cons(19,Cons(20,Cons(21,Cons(22,Cons(23,Cons(24,Cons(25,Cons(26,C
@@ -44,21 +44,22 @@ object Ch3 {
                                                   //| ))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))
                                                   //| ))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))
                                                   //| )))))))))))))))))))))))
- List.sum2(bigList)                               //> res9: Int = 20100
- 
- List.reverse(List(1,2,3))                        //> res10: data.List[Int] = Cons(3,Cons(2,Cons(1,Nil)))
- 
- val abc = List("a","b","c")                      //> abc  : data.List[String] = Cons(a,Cons(b,Cons(c,Nil)))
- List.foldLeft2(abc, "")((a,b) => a+a+b)          //> res11: String = aabaabc
- List.foldRight2(abc, "")((a,b) => a+b+b)         //> res12: String = abccbcc
- 
- List.append2(List(1,2),List(3,4))                //> res13: data.List[Int] = Cons(1,Cons(2,Cons(3,Cons(4,Nil))))
- 
- List.flatten(List(List(1,2),List(3,4),List(5)))  //> res14: data.List[Int] = Cons(1,Cons(2,Cons(3,Cons(4,Cons(5,Nil)))))
- 
- List.map(List(1,2,3))( (x : Int) => x + 1)       //> res15: data.List[Int] = Cons(2,Cons(3,Cons(4,Nil)))
- 
- List.filter(bigList, (_ : Int) % 2 == 1)         //> res16: data.List[Int] = Cons(1,Cons(3,Cons(5,Cons(7,Cons(9,Cons(11,Cons(13,C
+  List.sum2(bigList)                              //> res9: Int = 20100
+
+  List.reverse(List(1, 2, 3))                     //> res10: data.List[Int] = Cons(3,Cons(2,Cons(1,Nil)))
+
+  val abc = List("a", "b", "c")                   //> abc  : data.List[String] = Cons(a,Cons(b,Cons(c,Nil)))
+  List.foldLeft2(abc, "")((a, b) => a + a + b)    //> res11: String = aabaabc
+  List.foldRight2(abc, "")((a, b) => a + b + b)   //> res12: String = abccbcc
+
+  List.append2(List(1, 2), List(3, 4))            //> res13: data.List[Int] = Cons(1,Cons(2,Cons(3,Cons(4,Nil))))
+
+  List.flatten(List(List(1, 2), List(3, 4), List(5)))
+                                                  //> res14: data.List[Int] = Cons(1,Cons(2,Cons(3,Cons(4,Cons(5,Nil)))))
+
+  List.map(List(1, 2, 3))((x: Int) => x + 1)      //> res15: data.List[Int] = Cons(2,Cons(3,Cons(4,Nil)))
+
+  List.filter(bigList, (_: Int) % 2 == 1)         //> res16: data.List[Int] = Cons(1,Cons(3,Cons(5,Cons(7,Cons(9,Cons(11,Cons(13,C
                                                   //| ons(15,Cons(17,Cons(19,Cons(21,Cons(23,Cons(25,Cons(27,Cons(29,Cons(31,Cons(
                                                   //| 33,Cons(35,Cons(37,Cons(39,Cons(41,Cons(43,Cons(45,Cons(47,Cons(49,Cons(51,C
                                                   //| ons(53,Cons(55,Cons(57,Cons(59,Cons(61,Cons(63,Cons(65,Cons(67,Cons(69,Cons(
@@ -71,24 +72,25 @@ object Ch3 {
                                                   //| ,Cons(177,Cons(179,Cons(181,Cons(183,Cons(185,Cons(187,Cons(189,Cons(191,Con
                                                   //| s(193,Cons(195,Cons(197,Cons(199,Nil))))))))))))))))))))))))))))))))))))))))
                                                   //| ))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))
- List.flatMap(List(1,2,3))( i => List(i,i))       //> res17: data.List[Int] = Cons(1,Cons(1,Cons(2,Cons(2,Cons(3,Cons(3,Nil))))))
+  List.flatMap(List(1, 2, 3))(i => List(i, i))    //> res17: data.List[Int] = Cons(1,Cons(1,Cons(2,Cons(2,Cons(3,Cons(3,Nil))))))
                                                   //| 
- List.zip(List(1,2,3),List('a','b','c'))          //> res18: data.List[(Int, Char)] = Cons((1,a),Cons((2,b),Cons((3,c),Nil)))
- List.combine(List(1,2,3),List(4,5,6))(_ + _)     //> res19: data.List[Int] = Cons(5,Cons(7,Cons(9,Nil)))
- List.forall(List(1,2,3))(_ <= 3)                 //> res20: Boolean = true
- List.forall(List(1,2,3))(_ < 3)                  //> res21: Boolean = false
- List.hasSubsequence(bigList,List(48,49,50))      //> res22: Boolean = true
- 
- import Tree._
- val tree = Branch(Leaf(1),Branch(Leaf(2),Leaf(3)))
+  List.zip(List(1, 2, 3), List('a', 'b', 'c'))    //> res18: data.List[(Int, Char)] = Cons((1,a),Cons((2,b),Cons((3,c),Nil)))
+  List.combine(List(1, 2, 3), List(4, 5, 6))(_ + _)
+                                                  //> res19: data.List[Int] = Cons(5,Cons(7,Cons(9,Nil)))
+  List.forall(List(1, 2, 3))(_ <= 3)              //> res20: Boolean = true
+  List.forall(List(1, 2, 3))(_ < 3)               //> res21: Boolean = false
+  List.hasSubsequence(bigList, List(48, 49, 50))  //> res22: Boolean = true
+
+  import Tree._
+  val tree = Branch(Leaf(1), Branch(Leaf(2), Leaf(3)))
                                                   //> tree  : data.Branch[Int] = Branch(Leaf(1),Branch(Leaf(2),Leaf(3)))
- size(tree)                                       //> res23: Int = 5
- depth(tree)                                      //> res24: Int = 2
- maximum(tree)                                    //> res25: Int = 3
- map(tree)(x => x+1)                              //> res26: data.Tree[Int] = Branch(Leaf(2),Branch(Leaf(3),Leaf(4)))
- 
- size2(tree)                                      //> res27: Int = 5
- depth2(tree)                                     //> res28: Int = 2
- maximum2(tree)                                   //> res29: Int = 3
- map2(tree)(x => x+1)                             //> res30: data.Tree[Int] = Branch(Leaf(2),Branch(Leaf(3),Leaf(4)))
+  size(tree)                                      //> res23: Int = 5
+  depth(tree)                                     //> res24: Int = 2
+  maximum(tree)                                   //> res25: Int = 3
+  map(tree)(x => x + 1)                           //> res26: data.Tree[Int] = Branch(Leaf(2),Branch(Leaf(3),Leaf(4)))
+
+  size2(tree)                                     //> res27: Int = 5
+  depth2(tree)                                    //> res28: Int = 2
+  maximum2(tree)                                  //> res29: Int = 3
+  map2(tree)(x => x + 1)                          //> res30: data.Tree[Int] = Branch(Leaf(2),Branch(Leaf(3),Leaf(4)))
 }
