@@ -34,4 +34,15 @@ object Ch4 {
 
   Option.sequence2(List(some(1), some(2)))        //> res18: data.Option[data.List[Int]] = some(Cons(1,Cons(2,Nil)))
   Option.sequence2(List(some(1), none, some(3)))  //> res19: data.Option[data.List[Int]] = none
+  
+  import data.Either._
+  val e1 = safeDiv(1.,2.)                         //> e1  : data.Either[Exception,Double] = Right(0.5)
+  val e2 = safeDiv(2.,0.)                         //> e2  : data.Either[Exception,Double] = Left(java.lang.ArithmeticException)
+  val e3 = safeDiv(1.,4.)                         //> e3  : data.Either[Exception,Double] = Right(0.25)
+  e1.map2(e2)((a,b) => a+b)                       //> res20: data.Either[Exception,Double] = Left(java.lang.ArithmeticException)
+  e1.map2(e3)((a,b) => a+b)                       //> res21: data.Either[Exception,Double] = Right(0.75)
+	data.Either.sequence(List(e1,e2,e3))      //> res22: data.Either[Exception,data.List[Double]] = Left(java.lang.Arithmetic
+                                                  //| Exception)
+  data.Either.sequence(List(e1,e3))               //> res23: data.Either[Exception,data.List[Double]] = Right(Cons(0.5,Cons(0.25,
+                                                  //| Nil)))
 }

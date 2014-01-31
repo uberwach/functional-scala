@@ -4,9 +4,10 @@ sealed trait List[+A] {
   def exists(p: A => Boolean) : Boolean = !List.forall(this)(!p(_))
   def map[B](f: A => B) : List[B] = List.map(this)(f)
   def flatMap[B](f: A => List[B]) : List[B] = List.flatMap(this)(f)
+  def head : A = List.head(this)
 }
 case object Nil extends List[Nothing]
-case class Cons[+A](head: A, tail: List[A]) extends List[A]
+case class Cons[+A](heada: A, tail: List[A]) extends List[A]
 
 object List {
 
