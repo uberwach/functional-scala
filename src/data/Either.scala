@@ -21,13 +21,10 @@ case class Left[+E](value: E) extends Either[E, Nothing] // convention: this is 
 case class Right[+A](value: A) extends Either[Nothing, A]
 
 
-
-
-
 object Either {
   // inefficient though
   // and a little ugly probably...
-  // goes through the list 3 times at worst, and could be done in one go.
+  // goes through the list 3 times at worst, could be done in one pass through.
   // TODO: optimize to one pass through
   def traverse[E,A,B](as: List[A])(f: A => Either[E,B]) : Either[E,List[B]] = {
     val fa = as map f

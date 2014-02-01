@@ -19,6 +19,7 @@ sealed trait Option[+A] {
 
   def lift[A, B](f: A => B): Option[A] => Option[B] = _ map f
 
+  def isEmpty : Boolean = this match { case data.none => true case _ => false}
 }
 case class some[+A](get: A) extends Option[A]
 case object none extends Option[Nothing]
