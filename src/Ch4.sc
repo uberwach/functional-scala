@@ -29,10 +29,10 @@ object Ch4 {
   Option.map2(data.some(1), data.none: Option[Int])(_ + _)
                                                   //> res15: data.Option[Int] = none
 
-  Option.sequence(List(some(1), some(2)))         //> res16: data.Option[data.List[Int]] = some(Cons(1,Cons(2,Nil)))
+  Option.sequence(List(some(1), some(2)))         //> res16: data.Option[data.List[Int]] = some(List(1,2))
   Option.sequence(List(some(1), none, some(3)))   //> res17: data.Option[data.List[Int]] = none
 
-  Option.sequence2(List(some(1), some(2)))        //> res18: data.Option[data.List[Int]] = some(Cons(1,Cons(2,Nil)))
+  Option.sequence2(List(some(1), some(2)))        //> res18: data.Option[data.List[Int]] = some(List(1,2))
   Option.sequence2(List(some(1), none, some(3)))  //> res19: data.Option[data.List[Int]] = none
   
   import data.Either._
@@ -43,6 +43,5 @@ object Ch4 {
   e1.map2(e3)((a,b) => a+b)                       //> res21: data.Either[Exception,Double] = Right(0.75)
 	data.Either.sequence(List(e1,e2,e3))      //> res22: data.Either[Exception,data.List[Double]] = Left(java.lang.Arithmetic
                                                   //| Exception)
-  data.Either.sequence(List(e1,e3))               //> res23: data.Either[Exception,data.List[Double]] = Right(Cons(0.5,Cons(0.25,
-                                                  //| Nil)))
+  data.Either.sequence(List(e1,e3))               //> res23: data.Either[Exception,data.List[Double]] = Right(List(0.5,0.25))
 }

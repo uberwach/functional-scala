@@ -9,5 +9,4 @@ object Ch2 {
   val inc1 = partial1(1, sum)                     //> inc1  : Int => Int = <function1>
   inc1(1)                                         //> res3: Int = 2
   uncurry(curry(sum))(1, 1)                       //> res4: Int = 2
-
 }

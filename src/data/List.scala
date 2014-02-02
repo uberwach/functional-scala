@@ -5,6 +5,11 @@ sealed trait List[+A] {
   def map[B](f: A => B) : List[B] = List.map(this)(f)
   def flatMap[B](f: A => List[B]) : List[B] = List.flatMap(this)(f)
   def head : A = List.head(this)
+  
+  override def toString : String = this match {
+    case Nil => "Nil"
+    case _ => List.foldLeft(this,"List(")( (str,a) => str + a.toString() + ",").init + ")"
+  }
 }
 case object Nil extends List[Nothing]
 case class Cons[+A](heada: A, tail: List[A]) extends List[A]
