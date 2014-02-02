@@ -5,6 +5,7 @@ sealed trait List[+A] {
   def map[B](f: A => B) : List[B] = List.map(this)(f)
   def flatMap[B](f: A => List[B]) : List[B] = List.flatMap(this)(f)
   def head : A = List.head(this)
+  def foldLeft[B](b: B)(f: (B, A) => B): B = List.foldLeft(this,b)(f)
   
   override def toString : String = this match {
     case Nil => "Nil"

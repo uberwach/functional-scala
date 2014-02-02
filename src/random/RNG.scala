@@ -1,14 +1,14 @@
 package random
 
+import data.State
 trait RNG {
   import RNG._
   def nextInt: (Int, RNG)
-  val int: Rand[Int] = _.nextInt
 
 }
 
 object RNG {
-  type Rand[+A] = RNG => (A, RNG)
+  type Rand[+A] = State[RNG,A]
 
   def simple(seed: Long): RNG = new RNG {
     def nextInt = {
@@ -19,13 +19,15 @@ object RNG {
     }
   }
 
-  def positiveInt(rng: RNG): (Int, RNG) = {
+  val int: Rand[Int] = (_ : RNG).nextInt
+
+  def positiveInt : Rand[Int] = (rng : RNG) => {
     val (n, rng2) = rng.nextInt
     if (n == Int.MinValue) positiveInt(rng2)
     else (n.abs, rng2)
   }
 
-  def double(rng: RNG): (Double, RNG) = {
+  def double : Rand[Double] = (rng : RNG) => {
     val (n, rng2) = positiveInt(rng)
     if (n == Int.MaxValue) double(rng2)
     else (n.toDouble / Int.MaxValue.toDouble, rng2)
@@ -53,7 +55,7 @@ object RNG {
     val (d3, rng4) = double(rng3)
     ((d1, d2, d3), rng4)
   }
-  def ints(count: Int)(rng: RNG): (List[Int], RNG) = if (count <= 0) (Nil, rng)
+  def ints(count: Int) : Rand[List[Int]] = (rng : RNG) => if (count <= 0) (Nil, rng)
   else {
     val (n, rng2) = rng.nextInt
     val (list, rng3) = ints(count - 1)(rng2)
@@ -62,31 +64,48 @@ object RNG {
 
   // combinators
   def unit[A](a: A): Rand[A] =
-    rng => (a, rng)
+    (rng : RNG) => (a, rng)
 
   def map[A, B](s: Rand[A])(f: A => B): Rand[B] =
-    rng => {
+    (rng : RNG) => {
       val (a, rng2) = s(rng)
       (f(a), rng2)
     }
-  def map2[A, B, C](ra: Rand[A], rb: Rand[B])(f: (A, B) => C): Rand[C] = rng => {
+  def map2[A, B, C](ra: Rand[A], rb: Rand[B])(f: (A, B) => C): Rand[C] = (rng : RNG) => {
     val (a, rng2) = ra(rng)
     val (b, rng3) = rb(rng2)
     (f(a, b), rng3)
   }
 
-  def sequence[A](fs: List[Rand[A]]): Rand[List[A]] = rng => fs.foldLeft((Nil: List[A], rng))((listRNG, random) => {
+  def sequence[A](fs: List[Rand[A]]): Rand[List[A]] = (rng : RNG)=> fs.foldLeft((Nil: List[A], rng))((listRNG, random) => {
     val results = listRNG._1
     val rng = listRNG._2
     val (a, rng2) = random(rng)
     (a :: results, rng2)
   })
-  
-  def flatMap[A,B](f: Rand[A])(g: A => Rand[B]) : Rand[B] = ???
 
-  object withSequence {
-    def ints(count: Int)(rng: RNG): (List[Int], RNG) = sequence(List.fill(count)(rng.int))(rng)
+  def flatMap[A, B](ra: Rand[A])(g: A => Rand[B]): Rand[B] = (rng : RNG) => {
+    val (a, rng2) = ra(rng)
+    g(a)(rng2)
   }
+  object withSequence {
+    def ints(count: Int)(rng: RNG): (List[Int], RNG) = sequence(List.fill(count)(int))(rng)
+  }
+
+  object withFlatMap {
+    def positiveInt: Rand[Int] = flatMap(int)(n => 
+    	if (n != Int.MinValue) unit(n)
+    	else positiveInt
+    )
+    def map[A,B](s: Rand[A])(f: A => B): Rand[B] = flatMap(s)(a => unit(f(a)))
+      
+    def map2[A,B,C](ra: Rand[A], rb: Rand[B])(f: (A,B) => C): Rand[C] = {
+      val rab = flatMap(ra)(a => flatMap(rb)(b => unit((a,b))))
+      flatMap(rab)( ab => unit(f(ab._1,ab._2)))
+    }
+    
+  }
+
   def positiveMax(n: Int): Rand[Int] = map(positiveInt)(_ % (n + 1))
 
   object withMap {
