@@ -1,4 +1,4 @@
-My solutions + playground for the exercises of the book "Functional Programming in Scala" by MEAP (working through version 10). 
+My solutions + playground for the exercises of the book "Functional Programming in Scala" by Runár (first through version 10 of the book, since chapter 7 through the final edition).
 
 ## Summary of cool stuff
 Forcing tailrecursion by compiler
