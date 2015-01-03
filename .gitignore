@@ -1,6 +1,9 @@
+.idea/*
+.idea
 .project
 .cache
 .classpath
 .settings/
 .worksheet/
 bin/
+target/
