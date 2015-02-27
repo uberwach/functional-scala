@@ -1,18 +1,24 @@
 package data
 
 sealed trait List[+A] {
-  def exists(p: A => Boolean) : Boolean = !List.forall(this)(!p(_))
-  def map[B](f: A => B) : List[B] = List.map(this)(f)
-  def flatMap[B](f: A => List[B]) : List[B] = List.flatMap(this)(f)
-  def head : A = List.head(this)
-  def foldLeft[B](b: B)(f: (B, A) => B): B = List.foldLeft(this,b)(f)
-  
-  override def toString : String = this match {
+  def exists(p: A => Boolean): Boolean = !List.forall(this)(!p(_))
+
+  def map[B](f: A => B): List[B] = List.map(this)(f)
+
+  def flatMap[B](f: A => List[B]): List[B] = List.flatMap(this)(f)
+
+  def head: A = List.head(this)
+
+  def foldLeft[B](b: B)(f: (B, A) => B): B = List.foldLeft(this, b)(f)
+
+  override def toString: String = this match {
     case Nil => "Nil"
-    case _ => List.foldLeft(this,"List(")( (str,a) => str + a.toString() + ",").init + ")"
+    case _ => List.foldLeft(this, "List(")((str, a) => str + a.toString() + ",").init + ")"
   }
 }
+
 case object Nil extends List[Nothing]
+
 case class Cons[+A](heada: A, tail: List[A]) extends List[A]
 
 object List {
@@ -27,6 +33,7 @@ object List {
       case Cons(x, xs) => f(x, foldRight(xs, z)(f))
     }
   }
+
   def foldLeft[A, B](as: List[A], b: B)(f: (B, A) => B): B = {
     @annotation.tailrec
     def foldLeftAcc(as: List[A], acc: B): B = {
@@ -49,6 +56,7 @@ object List {
     }
     genAcc(Nil, 1)
   }
+
   // Pattern match version
   def sum(ints: List[Int]): Int = ints match {
     case Nil => 0
@@ -60,8 +68,10 @@ object List {
     case Cons(0.0, _) => 0.0
     case Cons(x, xs) => x * product(xs)
   }
+
   // Fold version
   def sum2(ints: List[Int]): Int = foldRight(ints, 0)(_ + _)
+
   def product2(ds: List[Double]): Double = foldRight(ds, 1.0)(_ * _)
 
   def tail[A](as: List[A]): List[A] = as match {
@@ -73,8 +83,8 @@ object List {
     case Nil => throw sys.error("No head of an empty list!")
     case Cons(x, xs) => x
   }
-  
-  def isEmpty[A](as : List[A]) : Boolean = as match {
+
+  def isEmpty[A](as: List[A]): Boolean = as match {
     case Nil => true
     case _ => false
   }
@@ -92,6 +102,7 @@ object List {
       case Cons(x, xs) => lastAcc(xs, x)
     }
   }
+
   def drop[A](as: List[A], n: Int): List[A] = {
     @annotation.tailrec
     def dropacc(as: List[A], n: Int, acc: List[A]): List[A] = {
@@ -114,6 +125,7 @@ object List {
     }
     dropacc(as, Nil)
   }
+
   def init[A](as: List[A]): A = {
     @annotation.tailrec
     def innerinit(as: List[A], a: A): A = {
@@ -127,6 +139,7 @@ object List {
       case Cons(x, xs) => innerinit(xs, x)
     }
   }
+
   def setHead[A](as: List[A], a: A) = Cons(a, tail(as))
 
   def append[A](a1: List[A], a2: List[A]): List[A] =
@@ -142,49 +155,53 @@ object List {
   def sum3(as: List[Int]): Int = foldLeft(as, 0)(_ + _)
 
   def reverse[A](as: List[A]): List[A] = foldLeft(as, Nil: List[A])((b, a) => Cons(a, b))
-  
-  def foldLeft2[A,B](as : List[A], b: B)(f: (B,A) => B) = foldRight(reverse(as),b)( (a,b) => f(b,a))
-  def foldRight2[A,B](as : List[A], b: B)(f: (A,B) => B) = foldLeft(reverse(as),b)( (b,a) => f(a,b))
-  
-  def append2[A](as1 : List[A], as2 : List[A]) : List[A] = foldRight(as1, as2)( (a,as) => Cons(a,as) )
-  
+
+  def foldLeft2[A, B](as: List[A], b: B)(f: (B, A) => B) = foldRight(reverse(as), b)((a, b) => f(b, a))
+
+  def foldRight2[A, B](as: List[A], b: B)(f: (A, B) => B) = foldLeft(reverse(as), b)((b, a) => f(a, b))
+
+  def append2[A](as1: List[A], as2: List[A]): List[A] = foldRight(as1, as2)((a, as) => Cons(a, as))
+
   // that identifier though
-  def flatten[A](ass : List[List[A]]) : List[A] = foldLeft(ass, Nil : List[A])(append)
-  
-  def map[A,B](as : List[A])(f: A => B) : List[B] = foldRight(as, Nil : List[B])((a,bs) => Cons(f(a),bs))
-  
-  def addOne(ns : List[Int]) = map(ns)( (x : Int) => x+1)
-  def print(ds : List[Double]) : List[String] = map(ds)( (_ : Double).toString)
-  
-  def filter[A](as: List[A], f: A => Boolean) : List[A] = foldRight(as, Nil: List[A])((a,xs) => {
-    if (f(a)) Cons(a,xs)
+  def flatten[A](ass: List[List[A]]): List[A] = foldLeft(ass, Nil: List[A])(append)
+
+  def map[A, B](as: List[A])(f: A => B): List[B] = foldRight(as, Nil: List[B])((a, bs) => Cons(f(a), bs))
+
+  def addOne(ns: List[Int]) = map(ns)((x: Int) => x + 1)
+
+  def print(ds: List[Double]): List[String] = map(ds)((_: Double).toString)
+
+  def filter[A](as: List[A], f: A => Boolean): List[A] = foldRight(as, Nil: List[A])((a, xs) => {
+    if (f(a)) Cons(a, xs)
     else xs
   })
-  
-  def flatMap[A,B](as: List[A])(f: A => List[B]) : List[B] = flatten(map(as)(f))
+
+  def flatMap[A, B](as: List[A])(f: A => List[B]): List[B] = flatten(map(as)(f))
+
   // filter by using flatMap
   def filter2[A](as: List[A])(f: A => Boolean) = flatMap(as)(a => if (f(a)) List(a) else Nil)
-  
+
   // definitely not optimal
-  def zip[A,B](as : List[A], bs : List[B]) : List[(A,B)] = {
+  def zip[A, B](as: List[A], bs: List[B]): List[(A, B)] = {
     @annotation.tailrec
-    def zipAcc(xs: List[A], ys : List[B], zs : List[(A,B)]) : List[(A,B)] = {
+    def zipAcc(xs: List[A], ys: List[B], zs: List[(A, B)]): List[(A, B)] = {
       if (isEmpty(xs) || isEmpty(ys)) zs
-      else zipAcc(tail(xs),tail(ys), Cons((head(xs),head(ys)),zs))
+      else zipAcc(tail(xs), tail(ys), Cons((head(xs), head(ys)), zs))
     }
-    reverse(zipAcc(as,bs,Nil))
+    reverse(zipAcc(as, bs, Nil))
   }
-  
-  def combine[A,B,C](as : List[A], bs : List[B])( f: (A,B) => C) : List[C] = map(zip(as,bs))( ab => f(ab._1,ab._2))
+
+  def combine[A, B, C](as: List[A], bs: List[B])(f: (A, B) => C): List[C] = map(zip(as, bs))(ab => f(ab._1, ab._2))
 
   def forall[A](as: List[A])(p: A => Boolean): Boolean = foldLeft(as, true)((b, a) => b && p(a))
+
   // inefficient but natural
   def hasSubsequence[A](as: List[A], sub: List[A]): Boolean = {
     if (isEmpty(sub)) true
     else if (isEmpty(as)) false
     else {
-      val asub = zip(as,sub)
-      (forall(asub)(x => x._1 == x._2) && (length(asub) == length(sub))) || hasSubsequence(tail(as),sub)
+      val asub = zip(as, sub)
+      (forall(asub)(x => x._1 == x._2) && (length(asub) == length(sub))) || hasSubsequence(tail(as), sub)
     }
   }
 }

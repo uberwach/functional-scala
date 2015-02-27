@@ -19,9 +19,14 @@ sealed trait Option[+A] {
 
   def lift[A, B](f: A => B): Option[A] => Option[B] = _ map f
 
-  def isEmpty : Boolean = this match { case data.none => true case _ => false}
+  def isEmpty: Boolean = this match {
+    case data.none => true
+    case _ => false
+  }
 }
+
 case class some[+A](get: A) extends Option[A]
+
 case object none extends Option[Nothing]
 
 // Chapter 4
@@ -88,10 +93,10 @@ object Option {
     pattern(pat) map (p => (s: String) => p.matcher(s).matches)
 
   def bothMatch_2(pat1: String, pat2: String, s: String): Option[Boolean] = map2(mkMatcher(pat1), mkMatcher(pat2))((a, b) => a(s) && b(s))
-  
-  
+
+
   // inefficient
-  def find[A](as : List[A])(p: A => Boolean) : Option[A] = {
+  def find[A](as: List[A])(p: A => Boolean): Option[A] = {
     val results = as.flatMap(a => if (p(a)) List(a) else Nil)
     if (List.isEmpty(results)) none
     else some(results.head)

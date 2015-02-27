@@ -53,7 +53,9 @@ trait Stream[+A] {
   def flatMap[B](f: A => Stream[B]): Stream[B] = Stream.flatten(this.map(f))
 
   // implementations using unfold
+
   import Stream.unfold
+
   def map2[B](f: A => B): Stream[B] = unfold(this)(s => {
     if (s.isEmpty) data.none
     else some((f(s.head), s.tail))
@@ -84,14 +86,16 @@ trait Stream[+A] {
   }), Stream(Stream.empty))
 
   // a O(n²) implementation would be tails.map(fold)
-  def scanRight[B](b: B)(f: (A,=> B) => B): Stream[B] = tails.map(s => s.foldRight(b)(f))
-  def scanLeft[B](b: B)(f: (A,=> B) => B): Stream[B] = unfold((this, b,false))(sb => {
-    val s = sb._1; // the stream of As
+  def scanRight[B](b: B)(f: (A, => B) => B): Stream[B] = tails.map(s => s.foldRight(b)(f))
+
+  def scanLeft[B](b: B)(f: (A, => B) => B): Stream[B] = unfold((this, b, false))(sb => {
+    val s = sb._1;
+    // the stream of As
     val binter = sb._2 // intermediate result of accumulator
     val cancellation = sb._3
     if (cancellation) data.none
-    else if (s.isEmpty) some((binter), (s,binter,true))
-    else some((binter, (s.tail, f(s.head, binter),false)))
+    else if (s.isEmpty) some((binter), (s, binter, true))
+    else some((binter, (s.tail, f(s.head, binter), false)))
   })
 }
 
@@ -100,7 +104,9 @@ object Stream {
 
   def flatten[A](ass: Stream[Stream[A]]): Stream[A] = ass.foldRight(Stream.empty[A])(append[A])
 
-  def empty[A]: Stream[A] = new Stream[A] { def uncons = none }
+  def empty[A]: Stream[A] = new Stream[A] {
+    def uncons = none
+  }
 
   def cons[A](hd: => A, tl: => Stream[A]): Stream[A] =
     new Stream[A] {
@@ -118,6 +124,7 @@ object Stream {
   def from(n: Int): Stream[Int] = cons(n, from(n + 1))
 
   def fibGen(a: Int, b: Int): Stream[Int] = cons(a + b, fibGen(b, a + b))
+
   def fib: Stream[Int] = cons(0, cons(1, fibGen(0, 1)))
 
   def unfold[A, S](z: S)(f: S => Option[(A, S)]): Stream[A] = f(z) match {

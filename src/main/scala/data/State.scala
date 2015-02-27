@@ -1,6 +1,7 @@
 package data
 
 case class State[S, +A](run: S => (A, S)) {
+
   import State._
 
   def apply(s: S) = run(s)
@@ -30,7 +31,9 @@ object State {
     val (a, state2) = random(state)
     (Cons(a, results), state2)
   })
+
   def get[S]: State[S, S] = ((s: S) => (s, s))
+
   def set[S](s: S): State[S, S] = ((s2: S) => (s, s))
 
   def modify[S](f: S => S): State[S, Unit] = for {
@@ -43,12 +46,15 @@ object State {
 object stateExample {
 
   sealed trait Input
+
   case object Coin extends Input
+
   case object Turn extends Input
 
   case class Machine(locked: Boolean, candies: Int, coins: Int)
 
   def flipTuple[A, B](ab: (A, B)): (B, A) = (ab._2, ab._1)
+
   def simulateMachine(inputs: List[Input]): State[Machine, Int] = {
     def stateTransistion(in: List[Input], s: (Machine, Int)): (Machine, Int) = in match {
       case Nil => s
