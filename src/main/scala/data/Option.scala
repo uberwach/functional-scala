@@ -17,7 +17,6 @@ sealed trait Option[+A] {
 
   def filter(f: A => Boolean): Option[A] = this.flatMap(a => if (f(a)) some(a) else none)
 
-  def lift[A, B](f: A => B): Option[A] => Option[B] = _ map f
 
   def isEmpty: Boolean = this match {
     case data.none => true
@@ -31,6 +30,10 @@ case object none extends Option[Nothing]
 
 // Chapter 4
 object Option {
+  def lift[A, B](f: A => B): Option[A] => Option[B] = _ map f
+
+  def lift2[A,B,C](f: (A,B) => C): (Option[A], Option[B]) => Option[C] = map2(_,_)(f)
+
   def map2[A, B, C](aOpt: Option[A], bOpt: Option[B])(f: (A, B) => C): Option[C] =
     for {
       a <- aOpt
