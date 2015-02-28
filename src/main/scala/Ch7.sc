@@ -1,5 +1,5 @@
 import par.Par
-import par.Par.Par
+import par.Par.Parallel
 
 def sum(ints: IndexedSeq[Int]): Int =
   if (ints.size <= 1)
@@ -7,8 +7,8 @@ def sum(ints: IndexedSeq[Int]): Int =
 
   else {
     val (l, r) = ints.splitAt(ints.length / 2)
-    val sumL: Par[Int] = Par.unit(sum(l))
-    val sumR: Par[Int] = Par.unit(sum(r))
+    val sumL: Parallel[Int] = Par.unit(sum(l))
+    val sumR: Parallel[Int] = Par.unit(sum(r))
     Par.get(sumL) + Par.get(sumR)
   }
 

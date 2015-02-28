@@ -2,7 +2,6 @@ object Ch5 {
   def if2[A](cond: Boolean)(onTrue: => A, onFalse: => A): A =
     if (cond) onTrue else onFalse
 
-
   if2(false)(sys.error("fail"), 3)
 
   import data.Stream._
@@ -46,11 +45,7 @@ object Ch5 {
 
   fib2.zip(ones).take(10).toList
 
-
   Stream.zipAll(Stream(1, 2, 3, 4), Stream("a", "b", "c")).toList
-
-
-
 
   startsWith(Stream(1, 2, 3, 4), Stream(1, 2, 3))
   startsWith(Stream(1, 2, 3), Stream(1, 2, 3, 4))
