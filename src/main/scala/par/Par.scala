@@ -60,12 +60,24 @@ object Par {
     override def call(): A = pa(es).get
   })
 
-  def get[A](pa: => Par[A]): A = ???
+  def get[A](pa: => Par[A]): A = {
+    implicit val es = Executors.newFixedThreadPool(8)
+    run(pa).get
+  }
 
   def sequence[A](pas: List[Par[A]]) : Par[List[A]] = {
     val parList = pas.foldLeft(unit(List[A]())) { (coll, pa) =>
       map2(coll, pa)((as, a) => a :: as)
     }
     map(parList)(_.reverse)
+  }
+  
+  def parMap[A,B](as: List[A])(f: A => B) : Par[List[B]] = {
+    val pbs: List[Par[B]] = as map asyncF(f)
+    sequence(pbs)
+  }
+
+  def parFilter[A](as: List[A])(p: A => Boolean) : Par[List[A]] = fork {
+    map(lazyUnit(as))(_ filter p)
   }
 }
